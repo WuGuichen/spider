@@ -1,5 +1,4 @@
 import requests
-from bs4 import BeautifulSoup
 import re
 
 base_url = 'http://opac.suda.edu.cn/m/weixin/wsearch.action'
