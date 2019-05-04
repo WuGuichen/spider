@@ -2,9 +2,7 @@ import requests
 from urllib.parse import urlencode
 from requests.exceptions import RequestException
 import re
-from time import sleep
 from bs4 import BeautifulSoup
-import json
 
 
 headers = {
@@ -114,5 +112,4 @@ def url_open(url):
 
 
 if __name__ == '__main__':
-
     main()
