@@ -3,6 +3,8 @@ from urllib.parse import urlencode
 from requests.exceptions import RequestException
 import re
 from time import sleep
+from bs4 import BeautifulSoup
+import json
 
 
 headers = {
@@ -55,27 +57,41 @@ def get_title(html):
 
 
 def get_content(html):
-    html = re.findall(r'.*?<p>(.*?)</p>.*?', html, re.M | re.S)
-    return html
+    text = BeautifulSoup(html, "lxml")
+    text = text.find_all('span')
+    for text in text:
+        text = text.text
+        yield text
+    return text
 
 
 def make_text(result):
     title = get_title(result)
     content = get_content(result)
-    print('《' + title[0] + '》')
-    for content in content:
-        print(content)
-
+    title = ['《' + title[0] + '》']
+    content = [x for x in content]
+    text = title + content
+    # with open('zhi' + '.txt', 'w', encoding='utf-8') as f:
+    for t in text:
+            # f.write(t)
+        print(t)
 
 def main():
-    page_num = int(input("Please input how many pages:"))
+    page_num = 1
     for num in range(1, page_num+1):
-        html = get_page_index('web', num*20, num*20+5)
+        html = get_page_index('web', 20+num*20, 20+num*20+5)
         url_list = get_url(html)
-        for i in range(2):
-            result = url_open(url_list.__next__())
-            make_text(result)
-            sleep(1)
+        for i in range(1):
+            try:
+                result = url_open(url_list.__next__())
+                text = make_text(result)
+                print(text)
+            except:
+                print('本页结束.')
+
+
+def make_file(text):
+    print(text)
 
 
 def get_url(text):
@@ -86,7 +102,7 @@ def get_url(text):
     for t1 in text1:
         for t2 in text2:
             if t1[0] == t2[1]:
-                url = 'https://www.zhihu.com/question/' + t2[0] + '/answer/' + t1[1]
+                url = 'https://www.zhihu.com/question/' + t2[0]
                 yield url
 
 
