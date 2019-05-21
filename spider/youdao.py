@@ -28,7 +28,7 @@ def get_html(url, headers, payload):
 
 def get_result(html):
     soup = BeautifulSoup(html, 'lxml')
-    result = soup.select('.wordGroup a')
+    result = soup.select('#phrsListTab > div > ul > p > span > a')
     return result
 
 
